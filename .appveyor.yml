@@ -1,0 +1,34 @@
+environment:
+  matrix:
+    - generator: "Visual Studio 14 2015"
+      configuration: Release
+    - generator: "Visual Studio 14 2015"
+      configuration: Debug
+    - generator: "Visual Studio 14 2015 Win64"
+      configuration: Release
+    - generator: "Visual Studio 14 2015 Win64"
+      configuration: Debug
+    - generator: "Visual Studio 10 2010"
+      configuration: Release
+    - generator: "Visual Studio 10 2010"
+      configuration: Debug
+    - generator: "Visual Studio 10 2010 Win64"
+      configuration: Release
+    - generator: "Visual Studio 10 2010 Win64"
+      configuration: Debug
+    - generator: "MinGW Makefiles"
+      configuration: Release
+    - generator: "MinGW Makefiles"
+      configuration: Debug      
+
+matrix:
+  fast_finish: true
+  
+shallow_clone: true
+
+before_build:
+- if "%generator%"=="MinGW Makefiles" set PATH=c:\MinGW\bin;%PATH%
+- cmake -Hsamples -Bbuild -G"%generator%" -DCMAKE_BUILD_TYPE=%configuration%
+
+build_script:
+- cmake --build build

@@ -1,13 +1,17 @@
+image: Visual Studio 2017
+
 configuration:
   - Debug
-  #- Release
+  - Release
 
 environment:
   matrix:
-    #- generator: "Visual Studio 14 2015"
-    #- generator: "Visual Studio 14 2015 Win64"
-    #- generator: "Visual Studio 10 2010"
-    #- generator: "Visual Studio 10 2010 Win64"
+    - generator: "Visual Studio 15 2017"
+    - generator: "Visual Studio 15 2017 Win64"
+    - generator: "Visual Studio 14 2015"
+    - generator: "Visual Studio 14 2015 Win64"
+    - generator: "Visual Studio 10 2010"
+    - generator: "Visual Studio 10 2010 Win64"
     - generator: "MinGW Makefiles"
       dialect: mingw
     - generator: "MinGW Makefiles"
@@ -26,4 +30,6 @@ before_build:
   - cmake -Hsamples -Bbuild -G"%generator%" -DCMAKE_BUILD_TYPE=%configuration%
 
 build_script:
-  - cmake --build build
+  - if "%generator:~0,6%"=="Visual" set CMAKE_BUILD_FLAGS=/m /v:m
+  - if "%generator:~0,5%"=="MinGW" set CMAKE_BUILD_FLAGS=-j%NUMBER_OF_PROCESSORS%
+  - cmake --build build -- %CMAKE_BUILD_FLAGS%
